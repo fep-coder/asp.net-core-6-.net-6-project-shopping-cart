@@ -2,7 +2,7 @@
 
 <ul class="list-group">
         <li class="list-group-item">
-                <a class="nav-link text-dark" asp-controller="Products" asp-action="Index">All Products</a>
+                <a class="nav-link text-dark" asp-controller="Products" asp-action="Index" asp-route-categorySlug="">All Products</a>
         </li>
 
         @foreach (var item in Model)
