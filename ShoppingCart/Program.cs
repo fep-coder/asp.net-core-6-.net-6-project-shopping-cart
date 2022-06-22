@@ -1,4 +1,12 @@
+using Microsoft.EntityFrameworkCore;
+using ShoppingCart.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<DataContext>(options =>
+{
+        options.UseSqlServer(builder.Configuration["ConnectionStrings:DbConnection"]);
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
