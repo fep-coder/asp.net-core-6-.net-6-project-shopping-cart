@@ -19,7 +19,7 @@
                                 @item.Price.ToString("C2")
                         </p>
                         <p>
-                                <a class="btn btn-primary" href="#">Add to cart</a>
+                                <a class="btn btn-primary" asp-controller="Cart" asp-action="Add" asp-route-id="@item.Id">Add to cart</a>
                         </p>
                 </div>
         }
