@@ -130,5 +130,27 @@ namespace ShoppingCart.Areas.Admin.Controllers
 
                         return View(product);
                 }
+
+                public async Task<IActionResult> Delete(long id)
+                {
+                        Product product = await _context.Products.FindAsync(id);
+
+                        if (!string.Equals(product.Image, "noimage.png"))
+                        {
+                                string uploadsDir = Path.Combine(_webHostEnvironment.WebRootPath, "media/products");
+                                string oldImagePath = Path.Combine(uploadsDir, product.Image);
+                                if (System.IO.File.Exists(oldImagePath))
+                                {
+                                        System.IO.File.Delete(oldImagePath);
+                                }
+                        }
+
+                        _context.Products.Remove(product);
+                        await _context.SaveChangesAsync();
+
+                        TempData["Success"] = "The product has been deleted!";
+
+                        return RedirectToAction("Index");
+                }
         }
 }
