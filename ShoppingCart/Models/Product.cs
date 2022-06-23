@@ -1,4 +1,5 @@
-﻿using ShoppingCart.Infrastructure.Validation;
+﻿
+using ShoppingCart.Infrastructure.Validation;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,6 +22,7 @@ namespace ShoppingCart.Models
                 [Column(TypeName = "decimal(8, 2)")]
                 public decimal Price { get; set; }
 
+                [Required, Range(1, int.MaxValue, ErrorMessage = "You must choose a category")]
                 public long CategoryId { get; set; }
 
                 public Category Category { get; set; }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ShoppingCart.Infrastructure;
+using ShoppingCart.Models;
 
 namespace ShoppingCart.Areas.Admin.Controllers
 {
@@ -37,6 +38,48 @@ namespace ShoppingCart.Areas.Admin.Controllers
                         ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name");
 
                         return View();
+                }
+
+                [HttpPost]
+                [ValidateAntiForgeryToken]
+                public async Task<IActionResult> Create(Product product)
+                {
+                        ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
+
+                        if (ModelState.IsValid)
+                        {
+                                product.Slug = product.Name.ToLower().Replace(" ", "-");
+
+                                var slug = await _context.Products.FirstOrDefaultAsync(p => p.Slug == product.Slug);
+                                if (slug != null)
+                                {
+                                        ModelState.AddModelError("", "The product already exists.");
+                                        return View(product);
+                                }
+
+                                if (product.ImageUpload != null)
+                                {
+                                        string uploadsDir = Path.Combine(_webHostEnvironment.WebRootPath, "media/products");
+                                        string imageName = Guid.NewGuid().ToString() + "_" + product.ImageUpload.FileName;
+
+                                        string filePath = Path.Combine(uploadsDir, imageName);
+
+                                        FileStream fs = new FileStream(filePath, FileMode.Create);
+                                        await product.ImageUpload.CopyToAsync(fs);
+                                        fs.Close();
+
+                                        product.Image = imageName;
+                                }
+
+                                _context.Add(product);
+                                await _context.SaveChangesAsync();
+
+                                TempData["Success"] = "The product has been created!";
+
+                                return RedirectToAction("Index");
+                        }
+
+                        return View(product);
                 }
         }
 }
