@@ -25,6 +25,27 @@
                                                 <li class="nav-item">
                                                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                                                 </li>
+                                                @if (User.Identity?.IsAuthenticated ?? false)
+                                                {
+                                                        <li class="nav-item">
+                                                                <a class="btn btn-primary" asp-area="Admin" asp-controller="Products" asp-action="Index">Products</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                                <a class="btn btn-danger" asp-controller="Account" asp-action="Logout">Hi, @User.Identity.Name, Log out</a>
+                                                        </li>
+                                                        @if (User.IsInRole("Admin") || User.IsInRole("Editor"))
+                                                        {
+                                                                <li class="nav-item">
+                                                                        <a class="btn btn-primary" asp-area="Admin" asp-controller="Products" asp-action="Index">Products</a>
+                                                                </li>
+                                                        }
+                                                }
+                                                else
+                                                {
+                                                        <li class="nav-item">
+                                                                <a class="btn btn-success" asp-controller="Account" asp-action="Login">Log in</a>
+                                                        </li>
+                                                }
                                         </ul>
                                 </div>
                         </div>
