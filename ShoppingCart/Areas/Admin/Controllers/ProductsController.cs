@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ShoppingCart.Infrastructure;
 
@@ -8,10 +9,13 @@ namespace ShoppingCart.Areas.Admin.Controllers
         public class ProductsController : Controller
         {
                 private readonly DataContext _context;
+                private readonly IWebHostEnvironment _webHostEnvironment;
 
-                public ProductsController(DataContext context)
+
+                public ProductsController(DataContext context, IWebHostEnvironment webHostEnvironment)
                 {
                         _context = context;
+                        _webHostEnvironment = webHostEnvironment;
                 }
 
                 public async Task<IActionResult> Index(int p = 1)
@@ -26,6 +30,13 @@ namespace ShoppingCart.Areas.Admin.Controllers
                                                                                         .Skip((p - 1) * pageSize)
                                                                                         .Take(pageSize)
                                                                                         .ToListAsync());
+                }
+
+                public IActionResult Create()
+                {
+                        ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name");
+
+                        return View();
                 }
         }
 }
