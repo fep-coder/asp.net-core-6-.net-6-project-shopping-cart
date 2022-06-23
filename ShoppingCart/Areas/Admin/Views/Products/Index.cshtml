@@ -1,0 +1,55 @@
+﻿@model IEnumerable<Product>
+
+@{
+        ViewData["Title"] = "Products";
+}
+
+<h1>Products</h1>
+
+<p>
+        <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+        <thead>
+                <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Image</th>
+                        <th></th>
+                </tr>
+        </thead>
+        <tbody>
+                @foreach (var item in Model)
+                {
+                        <tr>
+                                <td>
+                                        @item.Name
+                                </td>
+                                <td>
+                                        @item.Price.ToString("C2")
+                                </td>
+                                <td>
+                                        @item.Category.Name
+                                </td>
+                                <td>
+                                        <img src="/media/products/@item.Image" width="100" alt="" />
+                                </td>
+                                <td>
+                                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="confirmDeletion">Delete</a>
+                                </td>
+                        </tr>
+                }
+        </tbody>
+</table>
+
+<div class="d-flex w-100 justify-content-center">
+        <pagination page-count="@ViewBag.TotalPages"
+                    page-target="/admin/products/@ViewBag.CategorySlug"
+                    page-number="@ViewBag.PageNumber"
+                    page-range="@ViewBag.PageRange">
+        </pagination>
+</div>
